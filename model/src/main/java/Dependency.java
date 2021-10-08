@@ -1,4 +1,4 @@
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
-public record Dependency(DependencyType dependencyType, String fullyQualifiedNameOfConsumedObject, ImmutableSet<String> propertiesRequiringRebuild) {
+public record Dependency(DependencyType dependencyType, String fullyQualifiedNameOfConsumedObject, ImmutableList<String> propertiesRequiringRebuild) {
 }
