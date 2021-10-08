@@ -1,4 +1,4 @@
-# SQLIteCompare
+# SQLiteCompare
 A schema comparison tool for SQLite databases. Written in Java
 
 Support for the following objects will be implemented eventually.
