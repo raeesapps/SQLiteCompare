@@ -7,4 +7,8 @@ public enum DependencyType {
     DependencyType(int id) {
         this.id = id;
     }
+
+    public static DependencyType parse(String dependencyType) {
+        return DependencyType.valueOf(dependencyType);
+    }
 }
