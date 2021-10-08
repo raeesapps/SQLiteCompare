@@ -1,11 +1,9 @@
 import org.junit.Assert;
 import org.junit.Test;
-import org.yaml.snakeyaml.Yaml;
 
 public final class DatabaseObjectTests {
     @Test
     public void databaseObject_ToString_ProducesValidYaml() {
-        var yaml = new Yaml();
         var employees = new DatabaseObject
                 .Builder()
                 .name("employees")
@@ -14,7 +12,7 @@ public final class DatabaseObjectTests {
                 .dependency(new Dependency(DependencyType.SUBOBJECT, "surname"))
                 .build();
 
-        var serialisationOfEmployees = yaml.dump(employees);
+        var serialisationOfEmployees = employees.toString();
 
         Assert.assertEquals("""
                 !!DatabaseObject
