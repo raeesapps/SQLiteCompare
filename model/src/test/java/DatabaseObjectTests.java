@@ -15,7 +15,6 @@ public final class DatabaseObjectTests {
         var serialisationOfEmployees = employees.toString();
 
         Assert.assertEquals("""
-                !!DatabaseObject
                 dependencies:
                 - {dependencyType: SUBOBJECT, nameOfConsumedObject: firstname}
                 - {dependencyType: SUBOBJECT, nameOfConsumedObject: surname}
