@@ -1,6 +1,8 @@
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.nodes.Tag;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +14,6 @@ public final class DatabaseFactory {
     private static final String CLASS_INITIALISATION_EXCEPTION_MESSAGE = "DatabaseFactory cannot be initialised!";
 
     private static final WorkScheduler workScheduler = new WorkScheduler();
-    private static final Yaml yaml = new Yaml();
 
     private DatabaseFactory() throws Exception {
         throw new Exception(CLASS_INITIALISATION_EXCEPTION_MESSAGE);
@@ -23,6 +24,10 @@ public final class DatabaseFactory {
             @SuppressWarnings({"unchecked", "rawtypes"})
             @Override
             public Database call() {
+                var representer = new Representer();
+                representer.addClassTag(DatabaseObject.class, Tag.MAP);
+                representer.addClassTag(ImmutableList.class, Tag.SEQ);
+                var yaml = new Yaml(representer);
                 var databaseProperties = (Map<String, Object>) yaml.load(databaseYaml);
                 var objectLists = (Map<String, ArrayList>) databaseProperties.get("objectLists");
 

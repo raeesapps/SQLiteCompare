@@ -32,27 +32,23 @@ public class DatabaseTests {
         var serialisation = database.toString();
 
         Assert.assertEquals("""
-                !!Database
                 objectLists:
                   tables:
-                  - !!DatabaseObject
-                    dependencies:
+                  - dependencies:
                     - {dependencyType: SUBOBJECT, nameOfConsumedObject: firstname}
                     - {dependencyType: SUBOBJECT, nameOfConsumedObject: surname}
                     name: employees
                     objectType: table
                     properties: {}
                   columns:
-                  - !!DatabaseObject
-                    dependencies: &id001 []
+                  - dependencies: &id001 []
                     name: firstname
                     objectType: column
                     properties: {type: varchar}
-                  - !!DatabaseObject
-                    dependencies: *id001
+                  - dependencies: *id001
                     name: surname
                     objectType: column
                     properties: {type: varchar}
-                """, serialisation);
+                                """, serialisation);
     }
 }
