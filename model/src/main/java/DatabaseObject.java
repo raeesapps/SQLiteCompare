@@ -40,10 +40,7 @@ public record DatabaseObject(String name, String objectType, ImmutableMap<String
 
     @Override
     public String toString() {
-        var representer = new Representer();
-        representer.addClassTag(DatabaseObject.class, Tag.MAP);
-        representer.addClassTag(ImmutableList.class, Tag.SEQ);
-        var yaml = new Yaml(representer);
+        var yaml = YamlHelper.newYaml();
         return yaml.dumpAs(this, Tag.MAP, DumperOptions.FlowStyle.AUTO);
     }
 }
