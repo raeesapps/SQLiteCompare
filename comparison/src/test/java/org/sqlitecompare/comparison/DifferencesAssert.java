@@ -16,6 +16,29 @@ public final class DifferencesAssert extends ListAssert<Difference> {
         super(actual);
     }
 
+    public DifferencesAssert containsOnlyInSource(DatabaseObject source) {
+        isNotNull();
+        isNotEmpty();
+
+        var getDifference = getDifferenceContainingSource(source);
+        var maybeDifference = actual.stream().filter(getDifference).findFirst();
+        if (maybeDifference.isEmpty()) {
+            failWithMessage("There is not a difference object containing a reference to %s", source.name());
+        }
+
+        var difference = maybeDifference.get();
+        if (!difference.differenceType().equals(DifferenceType.ONLY_IN_SOURCE)) {
+            failWithMessage("The difference between %s is not an only in source difference", source.name());
+        }
+
+        return this;
+    }
+
+    private static Predicate<Difference> getDifferenceContainingSource(DatabaseObject source) {
+        return x -> x.source().isPresent()
+                && x.source().get().uniqueIdentifier().equals(source.uniqueIdentifier());
+    }
+
     public DifferencesAssert containsEqual(DatabaseObject source, DatabaseObject target) {
         isNotNull();
         isNotEmpty();
