@@ -39,9 +39,11 @@ public final class Comparer {
 
   private static Stream<Difference> differentOrEqual(
       ImmutableList<DatabaseObject> sourceObjects, ImmutableList<DatabaseObject> targetObjects) {
-    var sourceObjectMapping = sourceObjects.parallelStream().map(x -> Pair.with(x.uniqueIdentifier(), x))
+    var sourceObjectMapping = sourceObjects.parallelStream()
+        .map(x -> Pair.with(x.uniqueIdentifier(), x))
         .collect(new ImmutableMapCollector<>());
-    var targetObjectMapping = targetObjects.parallelStream().map(x -> Pair.with(x.uniqueIdentifier(), x))
+    var targetObjectMapping = targetObjects.parallelStream()
+        .map(x -> Pair.with(x.uniqueIdentifier(), x))
         .collect(new ImmutableMapCollector<>());
 
     var sourceObjectKeySet = sourceObjectMapping.keySet();
