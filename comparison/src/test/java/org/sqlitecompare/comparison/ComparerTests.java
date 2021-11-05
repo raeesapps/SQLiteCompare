@@ -37,6 +37,24 @@ public final class ComparerTests {
     }
 
     @Test
+    public void employees_table_only_in_target() {
+        var sourceDatabaseBuilder = new Database.Builder();
+        var source = sourceDatabaseBuilder.build();
+        var targetDatabaseBuilder = new Database.Builder();
+        var targetEmployees = A.table().withName("employees").withDependency("firstname").withDependency("surname").build();
+        var targetEmployeesFirstname = A.column().withName("firstname").withDatatype("varchar").withParentTable("employees").build();
+        var targetEmployeesSurname = A.column().withName("surname").withDatatype("varchar").withParentTable("employees").build();
+        TableBuilder.addTable(targetDatabaseBuilder, targetEmployees, targetEmployeesFirstname, targetEmployeesSurname);
+        var target = targetDatabaseBuilder.build();
+
+        var differences = Comparer.compare(source, target).collect(Collectors.toList());
+
+        DifferencesAssert.assertThat(differences).containsOnlyInTarget(targetEmployees);
+        DifferencesAssert.assertThat(differences).containsOnlyInTarget(targetEmployeesFirstname);
+        DifferencesAssert.assertThat(differences).containsOnlyInTarget(targetEmployeesSurname);
+    }
+
+    @Test
     public void surname_datatype_different() {
         var sourceDatabaseBuilder = new Database.Builder();
         var sourceEmployees = A.table().withName("employees").withDependency("firstname").withDependency("surname").build();
