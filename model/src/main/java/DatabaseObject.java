@@ -1,9 +1,7 @@
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.nodes.Tag;
-import org.yaml.snakeyaml.representer.Representer;
 
 public record DatabaseObject(String name, String objectType, ImmutableMap<String, Object> properties, ImmutableList<Dependency> dependencies) {
     public static class Builder {
