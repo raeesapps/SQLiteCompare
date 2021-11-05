@@ -1,7 +1,7 @@
 package org.sqlitecompare.model;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import org.javatuples.Pair;
 import org.sqlitecompare.ImmutableMapCollector;
 import org.yaml.snakeyaml.DumperOptions;
@@ -11,6 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public record Database(ImmutableMap<String, ImmutableList<DatabaseObject>> objectLists) {
+    @Override
+    public String toString() {
+        var yaml = YamlHelper.newYaml();
+        return yaml.dumpAs(this, Tag.MAP, DumperOptions.FlowStyle.AUTO);
+    }
+
     public static class Builder {
         private final Map<String, ImmutableList.Builder<DatabaseObject>> objectListsBuilder = new HashMap<>();
 
@@ -33,10 +39,5 @@ public record Database(ImmutableMap<String, ImmutableList<DatabaseObject>> objec
                     .collect(new ImmutableMapCollector<>());
             return new Database(objectLists);
         }
-    }
-    @Override
-    public String toString() {
-        var yaml = YamlHelper.newYaml();
-        return yaml.dumpAs(this, Tag.MAP, DumperOptions.FlowStyle.AUTO);
     }
 }

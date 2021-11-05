@@ -10,29 +10,30 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-public class ImmutableListCollector<T> implements Collector<T, ImmutableList.Builder<T>, ImmutableList<T>> {
-    @Override
-    public Supplier<ImmutableList.Builder<T>> supplier() {
-        return ImmutableList.Builder::new;
-    }
+public class ImmutableListCollector<T> implements
+    Collector<T, ImmutableList.Builder<T>, ImmutableList<T>> {
+  @Override
+  public Supplier<ImmutableList.Builder<T>> supplier() {
+    return ImmutableList.Builder::new;
+  }
 
-    @Override
-    public BiConsumer<ImmutableList.Builder<T>, T> accumulator() {
-        return ImmutableList.Builder::add;
-    }
+  @Override
+  public BiConsumer<ImmutableList.Builder<T>, T> accumulator() {
+    return ImmutableList.Builder::add;
+  }
 
-    @Override
-    public BinaryOperator<ImmutableList.Builder<T>> combiner() {
-        return (b1, b2) -> b1.addAll(b2.build());
-    }
+  @Override
+  public BinaryOperator<ImmutableList.Builder<T>> combiner() {
+    return (b1, b2) -> b1.addAll(b2.build());
+  }
 
-    @Override
-    public Function<ImmutableList.Builder<T>, ImmutableList<T>> finisher() {
-        return ImmutableList.Builder::build;
-    }
+  @Override
+  public Function<ImmutableList.Builder<T>, ImmutableList<T>> finisher() {
+    return ImmutableList.Builder::build;
+  }
 
-    @Override
-    public Set<Characteristics> characteristics() {
-        return ImmutableSet.of();
-    }
+  @Override
+  public Set<Characteristics> characteristics() {
+    return ImmutableSet.of();
+  }
 }
