@@ -47,11 +47,11 @@ public final class Comparer {
         var sourceExceptTarget = onlyInSource(sourceTargetUnion
                 .parallelStream()
                 .filter(object -> !targetObjectKeySet.contains(object))
-                .map(object -> sourceObjectMapping.get(object)));
+                .map(sourceObjectMapping::get));
         var targetExceptSource = onlyInTarget(sourceTargetUnion
                 .parallelStream()
                 .filter(object -> !sourceObjects.contains(object))
-                .map(object -> targetObjectMapping.get(object)));
+                .map(targetObjectMapping::get));
 
         return Stream.concat(sourceTargetIntersection, Stream.concat(sourceExceptTarget, targetExceptSource));
     }
