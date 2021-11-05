@@ -7,6 +7,8 @@ import org.sqlitecompare.model.table.TableBuilder;
 
 import java.util.stream.Collectors;
 
+import static org.sqlitecompare.comparison.DifferencesAssert.assertThat;
+
 public final class ComparerTests {
     @Test
     public void empty_database_has_no_differences() {
@@ -15,7 +17,7 @@ public final class ComparerTests {
 
         var differences = Comparer.compare(sourceDatabase, targetDatabase).collect(Collectors.toList());
 
-        DifferencesAssert.assertThat(differences).isEmpty();
+        assertThat(differences).isEmpty();
     }
 
     @Test
@@ -31,9 +33,9 @@ public final class ComparerTests {
 
         var differences = Comparer.compare(source, target).collect(Collectors.toList());
 
-        DifferencesAssert.assertThat(differences).containsOnlyInSource(sourceEmployees);
-        DifferencesAssert.assertThat(differences).containsOnlyInSource(sourceEmployeesFirstname);
-        DifferencesAssert.assertThat(differences).containsOnlyInSource(sourceEmployeesSurname);
+        assertThat(differences).containsOnlyInSource(sourceEmployees);
+        assertThat(differences).containsOnlyInSource(sourceEmployeesFirstname);
+        assertThat(differences).containsOnlyInSource(sourceEmployeesSurname);
     }
 
     @Test
@@ -49,9 +51,9 @@ public final class ComparerTests {
 
         var differences = Comparer.compare(source, target).collect(Collectors.toList());
 
-        DifferencesAssert.assertThat(differences).containsOnlyInTarget(targetEmployees);
-        DifferencesAssert.assertThat(differences).containsOnlyInTarget(targetEmployeesFirstname);
-        DifferencesAssert.assertThat(differences).containsOnlyInTarget(targetEmployeesSurname);
+        assertThat(differences).containsOnlyInTarget(targetEmployees);
+        assertThat(differences).containsOnlyInTarget(targetEmployeesFirstname);
+        assertThat(differences).containsOnlyInTarget(targetEmployeesSurname);
     }
 
     @Test
@@ -71,9 +73,9 @@ public final class ComparerTests {
 
         var differences = Comparer.compare(source, target).collect(Collectors.toList());
 
-        DifferencesAssert.assertThat(differences).containsEqual(sourceEmployees, targetEmployees);
-        DifferencesAssert.assertThat(differences).containsEqual(sourceEmployeesFirstname, targetEmployeesFirstname);
-        DifferencesAssert.assertThat(differences).containsDifferent(sourceEmployeesSurname, targetEmployeesSurname);
+        assertThat(differences).containsEqual(sourceEmployees, targetEmployees);
+        assertThat(differences).containsEqual(sourceEmployeesFirstname, targetEmployeesFirstname);
+        assertThat(differences).containsDifferent(sourceEmployeesSurname, targetEmployeesSurname);
     }
 
     @Test
@@ -94,10 +96,10 @@ public final class ComparerTests {
 
         var differences = Comparer.compare(source, target).collect(Collectors.toList());
 
-        DifferencesAssert.assertThat(differences).containsDifferent(sourceEmployees, targetEmployees);
-        DifferencesAssert.assertThat(differences).containsEqual(sourceEmployeesFirstname, targetEmployeesFirstname);
-        DifferencesAssert.assertThat(differences).containsDifferent(sourceEmployeesSurname, targetEmployeesSurname);
-        DifferencesAssert.assertThat(differences).containsOnlyInTarget(targetEmployeesJob);
+        assertThat(differences).containsDifferent(sourceEmployees, targetEmployees);
+        assertThat(differences).containsEqual(sourceEmployeesFirstname, targetEmployeesFirstname);
+        assertThat(differences).containsDifferent(sourceEmployeesSurname, targetEmployeesSurname);
+        assertThat(differences).containsOnlyInTarget(targetEmployeesJob);
     }
 
     @Test
@@ -126,11 +128,11 @@ public final class ComparerTests {
 
         var differences = Comparer.compare(source, target).collect(Collectors.toList());
 
-        DifferencesAssert.assertThat(differences).containsEqual(sourceEmployees, targetEmployees);
-        DifferencesAssert.assertThat(differences).containsEqual(sourceEmployeesFirstname, targetEmployeesFirstname);
-        DifferencesAssert.assertThat(differences).containsDifferent(sourceEmployeesSurname, targetEmployeesSurname);
-        DifferencesAssert.assertThat(differences).containsEqual(sourceHr, targetHr);
-        DifferencesAssert.assertThat(differences).containsEqual(sourceHrFirstname, targetHrFirstname);
-        DifferencesAssert.assertThat(differences).containsEqual(targetHrSurname, targetHrSurname);
+        assertThat(differences).containsEqual(sourceEmployees, targetEmployees);
+        assertThat(differences).containsEqual(sourceEmployeesFirstname, targetEmployeesFirstname);
+        assertThat(differences).containsDifferent(sourceEmployeesSurname, targetEmployeesSurname);
+        assertThat(differences).containsEqual(sourceHr, targetHr);
+        assertThat(differences).containsEqual(sourceHrFirstname, targetHrFirstname);
+        assertThat(differences).containsEqual(targetHrSurname, targetHrSurname);
     }
 }
