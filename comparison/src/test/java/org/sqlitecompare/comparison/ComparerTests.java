@@ -8,6 +8,15 @@ import org.sqlitecompare.model.table.TableBuilder;
 import java.util.stream.Collectors;
 
 public final class ComparerTests {
+    @Test
+    public void empty_database_has_no_differences() {
+        var sourceDatabase = new Database.Builder().build();
+        var targetDatabase = new Database.Builder().build();
+
+        var differences = Comparer.compare(sourceDatabase, targetDatabase).collect(Collectors.toList());
+
+        DifferencesAssert.assertThat(differences).isEmpty();
+    }
 
     @Test
     public void surname_datatype_different() {
