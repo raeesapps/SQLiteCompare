@@ -39,6 +39,29 @@ public final class DifferencesAssert extends ListAssert<Difference> {
                 && x.source().get().uniqueIdentifier().equals(source.uniqueIdentifier());
     }
 
+    public DifferencesAssert containsOnlyInTarget(DatabaseObject target) {
+        isNotNull();
+        isNotEmpty();
+
+        var getDifference = getDifferenceContainingTarget(target);
+        var maybeDifference = actual.stream().filter(getDifference).findFirst();
+        if (maybeDifference.isEmpty()) {
+            failWithMessage("There is not a difference object containing a reference to %s", target.name());
+        }
+
+        var difference = maybeDifference.get();
+        if (!difference.differenceType().equals(DifferenceType.ONLY_IN_TARGET)) {
+            failWithMessage("The difference between %s is not an only in target difference", target.name());
+        }
+
+        return this;
+    }
+
+    private static Predicate<Difference> getDifferenceContainingTarget(DatabaseObject target) {
+        return x -> x.target().isPresent()
+                && x.target().get().uniqueIdentifier().equals(target.uniqueIdentifier());
+    }
+
     public DifferencesAssert containsEqual(DatabaseObject source, DatabaseObject target) {
         isNotNull();
         isNotEmpty();
