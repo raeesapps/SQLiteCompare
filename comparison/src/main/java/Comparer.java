@@ -5,12 +5,6 @@ import com.google.common.collect.ImmutableSet;
 import org.javatuples.Pair;
 
 import java.util.Collection;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 public final class Comparer {
@@ -46,10 +40,10 @@ public final class Comparer {
         var sourceObjectKeySet = sourceObjectMapping.keySet();
         var targetObjectKeySet = targetObjectMapping.keySet();
 
-        var sourceTargetIntersection = sourceObjectKeySet
+        var sourceTargetIntersection = differentOrEqual(sourceObjectKeySet
                 .parallelStream()
                 .filter(targetObjectKeySet::contains)
-                .collect(new ImmutableSetCollector<>());
+                .collect(new ImmutableSetCollector<>()), sourceObjectMapping, targetObjectMapping);
 
         var sourceTargetUnion = Stream.concat(
                         sourceObjectKeySet.parallelStream(),
@@ -67,6 +61,50 @@ public final class Comparer {
                 .collect(new ImmutableSetCollector<>()));
 
         return null;
+    }
+
+    private static ImmutableList<Difference> differentOrEqual(ImmutableSet<String> objectKeys, ImmutableMap<String, DatabaseObject> sourceObjects, ImmutableMap<String, DatabaseObject> targetObjects)
+    {
+        var objectKeyStream = objectKeys.stream().parallel();
+
+        var equalObjects = objectKeyStream
+                .filter(objectKey -> sourceObjects.get(objectKey).equals(targetObjects.get(objectKey)))
+                .map(objectKey -> equal(sourceObjects.get(objectKey), targetObjects.get(objectKey)));
+        var differentObjects =  objectKeyStream
+                .filter(objectKey -> !sourceObjects.get(objectKey).equals(targetObjects.get(objectKey)))
+                .map(objectKey -> different(sourceObjects.get(objectKey), targetObjects.get(objectKey)));
+
+        var both = Stream.concat(equalObjects, differentObjects);
+        return both.collect(new ImmutableListCollector<>());
+    }
+
+    private static Difference different(DatabaseObject source, DatabaseObject target)
+    {
+        // Please note that this method assumes source and target properties have the same key set.
+
+        var sourceProperties = source.properties();
+        var sourcePropertiesKeySet = sourceProperties.keySet();
+
+        var targetProperties = target.properties();
+        var targetPropertiesKeySet = targetProperties.keySet();
+
+        /*
+        if (!sourcePropertiesKeySet.containsAll(targetPropertiesKeySet))
+        {
+            throw new Exception();
+        }*/
+        var propertiesChanged = sourcePropertiesKeySet
+                .stream()
+                .parallel()
+                .filter(key -> !sourceProperties.get(key).equals(targetProperties.get(key)))
+                .collect(new ImmutableListCollector<>());
+
+        return new Difference(DifferenceType.DIFFERENT, source, target, propertiesChanged);
+    }
+
+    private static Difference equal(DatabaseObject source, DatabaseObject target)
+    {
+        return new Difference(DifferenceType.EQUAL, source, target, ImmutableList.of());
     }
 
     private static ImmutableList<Difference> onlyInSource(ImmutableCollection<DatabaseObject> sourceObjects) {
