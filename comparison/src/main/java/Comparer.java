@@ -61,6 +61,7 @@ public final class Comparer {
         var equalObjects = objectKeys
                 .filter(objectKey -> sourceObjects.get(objectKey).equals(targetObjects.get(objectKey)))
                 .map(objectKey -> equal(sourceObjects.get(objectKey), targetObjects.get(objectKey)));
+
         var differentObjects =  objectKeys
                 .filter(objectKey -> !sourceObjects.get(objectKey).equals(targetObjects.get(objectKey)))
                 .map(objectKey -> different(sourceObjects.get(objectKey), targetObjects.get(objectKey)));
@@ -68,21 +69,13 @@ public final class Comparer {
         return Stream.concat(equalObjects, differentObjects);
     }
 
-    private static Difference different(DatabaseObject source, DatabaseObject target)
-    {
-        // Please note that this method assumes source and target properties have the same key set.
-
+    private static Difference different(DatabaseObject source, DatabaseObject target) {
+        // This code assumes source properties has the same key set as target properties.
         var sourceProperties = source.properties();
         var sourcePropertiesKeySet = sourceProperties.keySet();
 
         var targetProperties = target.properties();
-        var targetPropertiesKeySet = targetProperties.keySet();
 
-        /*
-        if (!sourcePropertiesKeySet.containsAll(targetPropertiesKeySet))
-        {
-            throw new Exception();
-        }*/
         var propertiesChanged = sourcePropertiesKeySet
                 .stream()
                 .parallel()
