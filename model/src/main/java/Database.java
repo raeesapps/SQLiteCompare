@@ -11,12 +11,12 @@ public record Database(ImmutableMap<String, ImmutableList<DatabaseObject>> objec
     public static class Builder {
         private final Map<String, ImmutableList.Builder<DatabaseObject>> objectListsBuilder = new HashMap<>();
 
-        public Builder object(String objectGroup, DatabaseObject.Builder object) {
+        public Builder object(String objectGroup, DatabaseObject object) {
             if (objectListsBuilder.containsKey(objectGroup)) {
                 var objectListBuilder = objectListsBuilder.get(objectGroup);
-                objectListBuilder.add(object.build());
+                objectListBuilder.add(object);
             } else {
-                objectListsBuilder.put(objectGroup, new ImmutableList.Builder<DatabaseObject>().add(object.build()));
+                objectListsBuilder.put(objectGroup, new ImmutableList.Builder<DatabaseObject>().add(object));
             }
 
             return this;

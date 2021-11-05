@@ -11,19 +11,19 @@ public class DatabaseTests {
                         .name("employees")
                         .objectType("table")
                         .dependency(new Dependency(DependencyType.SUBOBJECT, "firstname"))
-                        .dependency(new Dependency(DependencyType.SUBOBJECT, "surname")))
+                        .dependency(new Dependency(DependencyType.SUBOBJECT, "surname")).build())
                 .object("columns", new DatabaseObject
                         .Builder()
                         .name("firstname")
                         .objectType("column")
                         .property("type", "varchar")
-                        .property("parent", "employees"))
+                        .property("parent", "employees").build())
                 .object("columns", new DatabaseObject
                         .Builder()
                         .name("surname")
                         .objectType("column")
                         .property("type", "varchar")
-                        .property("parent", "employees"))
+                        .property("parent", "employees").build())
                 .build();
 
         var serialisation = database.toString();
