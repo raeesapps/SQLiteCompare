@@ -97,10 +97,10 @@ public final class Comparer {
     }
 
     private static Stream<Difference> onlyInSource(Stream<DatabaseObject> sourceObjects) {
-        return sourceObjects.map(x -> new Difference(DifferenceType.ONLY_IN_SOURCE, Optional.of(x), Optional.empty(), ImmutableList.of()));
+        return sourceObjects.map(sourceObject -> new Difference(DifferenceType.ONLY_IN_SOURCE, Optional.of(sourceObject), Optional.empty(), ImmutableList.of()));
     }
 
     private static Stream<Difference> onlyInTarget(Stream<DatabaseObject> targetObjects) {
-        return targetObjects.map(x -> new Difference(DifferenceType.ONLY_IN_TARGET, Optional.empty(), Optional.of(x), ImmutableList.of()));
+        return targetObjects.map(targetObject -> new Difference(DifferenceType.ONLY_IN_TARGET, Optional.empty(), Optional.of(targetObject), ImmutableList.of()));
     }
 }
