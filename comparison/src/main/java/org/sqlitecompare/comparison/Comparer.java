@@ -26,8 +26,11 @@ public final class Comparer {
     private static Stream<Difference> compare(Database source, Database target, ImmutableSet<String> sourceKeySet, ImmutableSet<String> targetKeySet, String objectType) {
         if (sourceKeySet.contains(objectType) && targetKeySet.contains(objectType)) {
             return differentOrEqual(source.objectLists().get(objectType), target.objectLists().get(objectType));
+        } else if (sourceKeySet.contains(objectType)) {
+            return onlyInSource(source.objectLists().get(objectType));
+        } else {
+            return onlyInTarget(target.objectLists().get(objectType));
         }
-        return Stream.of();
     }
 
     private static Stream<Difference> differentOrEqual(ImmutableList<DatabaseObject> sourceObjects, ImmutableList<DatabaseObject> targetObjects) {
