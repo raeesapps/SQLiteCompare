@@ -1,72 +1,31 @@
 package org.sqlitecompare.comparison;
 
 import org.junit.Test;
+import org.sqlitecompare.model.A;
 import org.sqlitecompare.model.Database;
-import org.sqlitecompare.model.DatabaseObject;
-import org.sqlitecompare.model.Dependency;
-import org.sqlitecompare.model.DependencyType;
+import org.sqlitecompare.model.table.TableBuilder;
 
 import java.util.stream.Collectors;
 
-public class ComparerTests {
+public final class ComparerTests {
 
     @Test
     public void surname_datatype_different() {
-        var sourceEmployees = new DatabaseObject.Builder()
-                .name("employees")
-                .objectType("table")
-                .dependency(new Dependency(DependencyType.SUBOBJECT, "firstname"))
-                .dependency(new Dependency(DependencyType.SUBOBJECT, "surname"))
-                .build();
-        var sourceEmployeesFirstname = new DatabaseObject
-                .Builder()
-                .name("firstname")
-                .objectType("column")
-                .property("type", "varchar")
-                .property("parent", "employees")
-                .build();
-        var sourceEmployeesSurname = new DatabaseObject
-                .Builder()
-                .name("surname")
-                .objectType("column")
-                .property("type", "varchar")
-                .property("parent", "employees")
-                .build();
-        var source = new Database.Builder()
-                .object("tables", sourceEmployees)
-                .object("columns", sourceEmployeesFirstname)
-                .object("columns", sourceEmployeesSurname)
-                .build();
-
-        var targetEmployees = new DatabaseObject
-                .Builder()
-                .name("employees")
-                .objectType("table")
-                .dependency(new Dependency(DependencyType.SUBOBJECT, "firstname"))
-                .dependency(new Dependency(DependencyType.SUBOBJECT, "surname"))
-                .build();
-        var targetEmployeesFirstname = new DatabaseObject
-                .Builder()
-                .name("firstname")
-                .objectType("column")
-                .property("type", "varchar")
-                .property("parent", "employees")
-                .build();
-        var targetEmployeesSurname = new DatabaseObject
-                .Builder()
-                .name("surname")
-                .objectType("column")
-                .property("type", "int")
-                .property("parent", "employees")
-                .build();
-        var target = new Database
-                .Builder()
-                .object("tables", targetEmployees)
-                .object("columns", targetEmployeesFirstname)
-                .object("columns", targetEmployeesSurname)
-                .build();
+        var sourceDatabaseBuilder = new Database.Builder();
+        var sourceEmployees = A.table().withName("employees").withDependency("firstname").withDependency("surname").build();
+        var sourceEmployeesFirstname = A.column().withName("firstname").withDatatype("varchar").withParentTable("employees").build();
+        var sourceEmployeesSurname = A.column().withName("surname").withDatatype("varchar").withParentTable("employees").build();
+        TableBuilder.addTable(sourceDatabaseBuilder, sourceEmployees, sourceEmployeesFirstname, sourceEmployeesSurname);
+        var source = sourceDatabaseBuilder.build();
+        var targetDatabaseBuilder = new Database.Builder();
+        var targetEmployees = A.table().withName("employees").withDependency("firstname").withDependency("surname").build();
+        var targetEmployeesFirstname = A.column().withName("firstname").withDatatype("varchar").withParentTable("employees").build();
+        var targetEmployeesSurname = A.column().withName("surname").withDatatype("int").withParentTable("employees").build();
+        TableBuilder.addTable(targetDatabaseBuilder, targetEmployees, targetEmployeesFirstname, targetEmployeesSurname);
+        var target = targetDatabaseBuilder.build();
 
         var differences = Comparer.compare(source, target).collect(Collectors.toList());
+
         DifferencesAssert.assertThat(differences).containsEqual(sourceEmployees, targetEmployees);
         DifferencesAssert.assertThat(differences).containsEqual(sourceEmployeesFirstname, targetEmployeesFirstname);
         DifferencesAssert.assertThat(differences).containsDifferent(sourceEmployeesSurname, targetEmployeesSurname);
@@ -74,111 +33,30 @@ public class ComparerTests {
 
     @Test
     public void surname_datatype_different_in_employees_but_equal_in_hr() {
-        var sourceEmployees = new DatabaseObject
-                .Builder()
-                .name("employees")
-                .objectType("table")
-                .dependency(new Dependency(DependencyType.SUBOBJECT, "firstname"))
-                .dependency(new Dependency(DependencyType.SUBOBJECT, "surname"))
-                .build();
-        var sourceEmployeesFirstname = new DatabaseObject
-                .Builder()
-                .name("firstname")
-                .objectType("column")
-                .property("type", "varchar")
-                .property("parent", "employees")
-                .build();
-        var sourceEmployeesSurname = new DatabaseObject
-                .Builder()
-                .name("surname")
-                .objectType("column")
-                .property("type", "varchar")
-                .property("parent", "employees")
-                .build();
-        var sourceHr = new DatabaseObject
-                .Builder()
-                .name("hr")
-                .objectType("table")
-                .dependency(new Dependency(DependencyType.SUBOBJECT, "firstname"))
-                .dependency(new Dependency(DependencyType.SUBOBJECT, "surname"))
-                .build();
-        var sourceHrFirstname = new DatabaseObject
-                .Builder()
-                .name("firstname")
-                .objectType("column")
-                .property("type", "varchar")
-                .property("parent", "hr")
-                .build();
-        var sourceHrSurname = new DatabaseObject
-                .Builder()
-                .name("surname")
-                .objectType("column")
-                .property("type", "varchar")
-                .property("parent", "hr")
-                .build();
-        var source = new Database
-                .Builder()
-                .object("tables", sourceEmployees)
-                .object("tables", sourceHr)
-                .object("columns", sourceEmployeesFirstname)
-                .object("columns", sourceEmployeesSurname)
-                .object("columns", sourceHrFirstname)
-                .object("columns", sourceHrSurname)
-                .build();
+        var sourceDatabaseBuilder = new Database.Builder();
+        var sourceEmployees = A.table().withName("employees").withDependency("firstname").withDependency("surname").build();
+        var sourceEmployeesFirstname = A.column().withName("firstname").withDatatype("varchar").withParentTable("employees").build();
+        var sourceEmployeesSurname = A.column().withName("surname").withDatatype("varchar").withParentTable("employees").build();
+        TableBuilder.addTable(sourceDatabaseBuilder, sourceEmployees, sourceEmployeesFirstname, sourceEmployeesSurname);
+        var sourceHr = A.table().withName("hr").withDependency("firstname").withDependency("surname").build();
+        var sourceHrFirstname = A.column().withName("firstname").withDatatype("varchar").withParentTable("hr").build();
+        var sourceHrSurname = A.column().withName("surname").withDatatype("varchar").withParentTable("hr").build();
+        TableBuilder.addTable(sourceDatabaseBuilder, sourceHr, sourceHrFirstname, sourceHrSurname);
+        var source = sourceDatabaseBuilder.build();
 
-        var targetEmployees = new DatabaseObject
-                .Builder()
-                .name("employees")
-                .objectType("table")
-                .dependency(new Dependency(DependencyType.SUBOBJECT, "firstname"))
-                .dependency(new Dependency(DependencyType.SUBOBJECT, "surname"))
-                .build();
-        var targetEmployeesFirstname = new DatabaseObject
-                .Builder()
-                .name("firstname")
-                .objectType("column")
-                .property("type", "varchar")
-                .property("parent", "employees")
-                .build();
-        var targetEmployeesSurname = new DatabaseObject
-                .Builder()
-                .name("surname")
-                .objectType("column")
-                .property("type", "int")
-                .property("parent", "employees")
-                .build();
-        var targetHr = new DatabaseObject
-                .Builder()
-                .name("hr")
-                .objectType("table")
-                .dependency(new Dependency(DependencyType.SUBOBJECT, "firstname"))
-                .dependency(new Dependency(DependencyType.SUBOBJECT, "surname"))
-                .build();
-        var targetHrFirstname = new DatabaseObject
-                .Builder()
-                .name("firstname")
-                .objectType("column")
-                .property("type", "varchar")
-                .property("parent", "hr")
-                .build();
-        var targetHrSurname = new DatabaseObject
-                .Builder()
-                .name("surname")
-                .objectType("column")
-                .property("type", "varchar")
-                .property("parent", "hr")
-                .build();
-        var target = new Database
-                .Builder()
-                .object("tables", targetEmployees)
-                .object("tables", targetHr)
-                .object("columns", targetEmployeesFirstname)
-                .object("columns", targetEmployeesSurname)
-                .object("columns", targetHrFirstname)
-                .object("columns", targetHrSurname)
-                .build();
+        var targetDatabaseBuilder = new Database.Builder();
+        var targetEmployees = A.table().withName("employees").withDependency("firstname").withDependency("surname").build();
+        var targetEmployeesFirstname = A.column().withName("firstname").withDatatype("varchar").withParentTable("employees").build();
+        var targetEmployeesSurname = A.column().withName("surname").withDatatype("int").withParentTable("employees").build();
+        TableBuilder.addTable(targetDatabaseBuilder, targetEmployees, targetEmployeesFirstname, targetEmployeesSurname);
+        var targetHr = A.table().withName("hr").withDependency("firstname").withDependency("surname").build();
+        var targetHrFirstname = A.column().withName("firstname").withDatatype("varchar").withParentTable("hr").build();
+        var targetHrSurname = A.column().withName("surname").withDatatype("varchar").withParentTable("hr").build();
+        TableBuilder.addTable(targetDatabaseBuilder, targetHr, targetHrFirstname, targetHrSurname);
+        var target = targetDatabaseBuilder.build();
 
         var differences = Comparer.compare(source, target).collect(Collectors.toList());
+
         DifferencesAssert.assertThat(differences).containsEqual(sourceEmployees, targetEmployees);
         DifferencesAssert.assertThat(differences).containsEqual(sourceEmployeesFirstname, targetEmployeesFirstname);
         DifferencesAssert.assertThat(differences).containsDifferent(sourceEmployeesSurname, targetEmployeesSurname);
