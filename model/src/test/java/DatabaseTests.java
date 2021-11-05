@@ -16,12 +16,14 @@ public class DatabaseTests {
                         .Builder()
                         .name("firstname")
                         .objectType("column")
-                        .property("type", "varchar"))
+                        .property("type", "varchar")
+                        .property("parent", "employees"))
                 .object("columns", new DatabaseObject
                         .Builder()
                         .name("surname")
                         .objectType("column")
-                        .property("type", "varchar"))
+                        .property("type", "varchar")
+                        .property("parent", "employees"))
                 .build();
 
         var serialisation = database.toString();
@@ -39,11 +41,11 @@ public class DatabaseTests {
                   - dependencies: &id001 []
                     name: firstname
                     objectType: column
-                    properties: {type: varchar}
+                    properties: {type: varchar, parent: employees}
                   - dependencies: *id001
                     name: surname
                     objectType: column
-                    properties: {type: varchar}
+                    properties: {type: varchar, parent: employees}
                                 """, serialisation);
     }
 }
