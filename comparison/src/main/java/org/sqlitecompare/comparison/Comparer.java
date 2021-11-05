@@ -18,7 +18,7 @@ public final class Comparer {
     var sourceKeySet = source.objectLists().keySet();
     var targetKeySet = target.objectLists().keySet();
 
-    var objectTypesInBoth = Sets.union(sourceKeySet, targetKeySet).stream();
+    var objectTypesInBoth = Sets.union(sourceKeySet, targetKeySet).parallelStream();
 
     return objectTypesInBoth.flatMap(
         objectType -> compare(source, target, sourceKeySet, targetKeySet, objectType));
@@ -31,17 +31,17 @@ public final class Comparer {
       return differentOrEqual(
           source.objectLists().get(objectType), target.objectLists().get(objectType));
     } else if (sourceKeySet.contains(objectType)) {
-      return onlyInSource(source.objectLists().get(objectType).stream());
+      return onlyInSource(source.objectLists().get(objectType).parallelStream());
     } else {
-      return onlyInTarget(target.objectLists().get(objectType).stream());
+      return onlyInTarget(target.objectLists().get(objectType).parallelStream());
     }
   }
 
   private static Stream<Difference> differentOrEqual(
       ImmutableList<DatabaseObject> sourceObjects, ImmutableList<DatabaseObject> targetObjects) {
-    var sourceObjectMapping = sourceObjects.stream().map(x -> Pair.with(x.uniqueIdentifier(), x))
+    var sourceObjectMapping = sourceObjects.parallelStream().map(x -> Pair.with(x.uniqueIdentifier(), x))
         .collect(new ImmutableMapCollector<>());
-    var targetObjectMapping = targetObjects.stream().map(x -> Pair.with(x.uniqueIdentifier(), x))
+    var targetObjectMapping = targetObjects.parallelStream().map(x -> Pair.with(x.uniqueIdentifier(), x))
         .collect(new ImmutableMapCollector<>());
 
     var sourceObjectKeySet = sourceObjectMapping.keySet();
@@ -58,14 +58,14 @@ public final class Comparer {
         .difference(sourceObjectKeySet, targetObjectKeySet)
         .immutableCopy();
     var sourceExceptTarget = onlyInSource(objectKeysInSourceButNotTarget
-        .stream()
+        .parallelStream()
         .map(sourceObjectMapping::get));
 
     var objectKeysInTargetButNotSource = Sets
         .difference(targetObjectKeySet, sourceObjectKeySet)
         .immutableCopy();
     var targetExceptSource = onlyInTarget(objectKeysInTargetButNotSource
-        .stream()
+        .parallelStream()
         .map(targetObjectMapping::get));
 
     return Stream.concat(objectsInBoth, Stream.concat(targetExceptSource, sourceExceptTarget));
@@ -75,12 +75,12 @@ public final class Comparer {
       ImmutableSet<String> objectKeys, ImmutableMap<String, DatabaseObject> sourceObjects,
       ImmutableMap<String, DatabaseObject> targetObjects) {
     var equalObjects = objectKeys
-        .stream()
+        .parallelStream()
         .filter(objectKey -> sourceObjects.get(objectKey).equals(targetObjects.get(objectKey)))
         .map(objectKey -> equal(sourceObjects.get(objectKey), targetObjects.get(objectKey)));
 
     var differentObjects = objectKeys
-        .stream()
+        .parallelStream()
         .filter(objectKey -> !sourceObjects.get(objectKey).equals(targetObjects.get(objectKey)))
         .map(objectKey -> different(sourceObjects.get(objectKey), targetObjects.get(objectKey)));
 
@@ -95,7 +95,7 @@ public final class Comparer {
     var targetProperties = target.properties();
 
     var propertiesChanged = sourcePropertiesKeySet
-        .stream()
+        .parallelStream()
         .filter(key -> !sourceProperties.get(key).equals(targetProperties.get(key)))
         .collect(new ImmutableListCollector<>());
 
