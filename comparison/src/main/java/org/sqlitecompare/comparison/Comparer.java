@@ -55,7 +55,7 @@ public final class Comparer {
                 .collect(new ImmutableListCollector<>()));
 
         var objectKeysInTargetButNotSource = Sets
-                .difference(sourceObjectKeySet, targetObjectKeySet)
+                .difference(targetObjectKeySet, sourceObjectKeySet)
                 .immutableCopy();
         var targetExceptSource = onlyInTarget(objectKeysInTargetButNotSource
                 .stream()
