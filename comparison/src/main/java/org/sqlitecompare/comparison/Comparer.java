@@ -31,9 +31,9 @@ public final class Comparer {
       return differentOrEqual(
           source.objectLists().get(objectType), target.objectLists().get(objectType));
     } else if (sourceKeySet.contains(objectType)) {
-      return onlyInSource(source.objectLists().get(objectType));
+      return onlyInSource(source.objectLists().get(objectType).stream());
     } else {
-      return onlyInTarget(target.objectLists().get(objectType));
+      return onlyInTarget(target.objectLists().get(objectType).stream());
     }
   }
 
@@ -59,16 +59,14 @@ public final class Comparer {
         .immutableCopy();
     var sourceExceptTarget = onlyInSource(objectKeysInSourceButNotTarget
         .stream()
-        .map(sourceObjectMapping::get)
-        .collect(new ImmutableListCollector<>()));
+        .map(sourceObjectMapping::get));
 
     var objectKeysInTargetButNotSource = Sets
         .difference(targetObjectKeySet, sourceObjectKeySet)
         .immutableCopy();
     var targetExceptSource = onlyInTarget(objectKeysInTargetButNotSource
         .stream()
-        .map(targetObjectMapping::get)
-        .collect(new ImmutableListCollector<>()));
+        .map(targetObjectMapping::get));
 
     return Stream.concat(objectsInBoth, Stream.concat(targetExceptSource, sourceExceptTarget));
   }
@@ -110,14 +108,14 @@ public final class Comparer {
         DifferenceType.EQUAL, Optional.of(source), Optional.of(target), ImmutableList.of());
   }
 
-  private static Stream<Difference> onlyInSource(ImmutableList<DatabaseObject> sourceObjects) {
-    return sourceObjects.stream().map(
+  private static Stream<Difference> onlyInSource(Stream<DatabaseObject> sourceObjects) {
+    return sourceObjects.map(
         sourceObject -> new Difference(DifferenceType.ONLY_IN_SOURCE, Optional.of(sourceObject),
             Optional.empty(), ImmutableList.of()));
   }
 
-  private static Stream<Difference> onlyInTarget(ImmutableList<DatabaseObject> targetObjects) {
-    return targetObjects.stream().map(
+  private static Stream<Difference> onlyInTarget(Stream<DatabaseObject> targetObjects) {
+    return targetObjects.map(
         targetObject -> new Difference(DifferenceType.ONLY_IN_TARGET, Optional.empty(),
             Optional.of(targetObject), ImmutableList.of()));
   }
