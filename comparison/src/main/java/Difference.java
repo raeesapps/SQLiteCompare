@@ -1,2 +1,4 @@
-public record Difference(DifferenceType differenceType, DatabaseObject source, DatabaseObject target, Iterable<String> propertiesChanged) {
+import java.util.Optional;
+
+public record Difference(DifferenceType differenceType, Optional<DatabaseObject> source, Optional<DatabaseObject> target, Iterable<String> propertiesChanged) {
 }

@@ -3,6 +3,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.javatuples.Pair;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public final class Comparer {
@@ -88,18 +89,18 @@ public final class Comparer {
                 .filter(key -> !sourceProperties.get(key).equals(targetProperties.get(key)))
                 .collect(new ImmutableListCollector<>());
 
-        return new Difference(DifferenceType.DIFFERENT, source, target, propertiesChanged);
+        return new Difference(DifferenceType.DIFFERENT, Optional.of(source), Optional.of(target), propertiesChanged);
     }
 
     private static Difference equal(DatabaseObject source, DatabaseObject target) {
-        return new Difference(DifferenceType.EQUAL, source, target, ImmutableList.of());
+        return new Difference(DifferenceType.EQUAL, Optional.of(source), Optional.of(target), ImmutableList.of());
     }
 
     private static Stream<Difference> onlyInSource(Stream<DatabaseObject> sourceObjects) {
-        return sourceObjects.map(x -> new Difference(DifferenceType.ONLY_IN_SOURCE, x, null, null));
+        return sourceObjects.map(x -> new Difference(DifferenceType.ONLY_IN_SOURCE, Optional.of(x), Optional.empty(), ImmutableList.of()));
     }
 
     private static Stream<Difference> onlyInTarget(Stream<DatabaseObject> targetObjects) {
-        return targetObjects.map(x -> new Difference(DifferenceType.ONLY_IN_TARGET, null, x, null));
+        return targetObjects.map(x -> new Difference(DifferenceType.ONLY_IN_TARGET, Optional.empty(), Optional.of(x), ImmutableList.of()));
     }
 }
