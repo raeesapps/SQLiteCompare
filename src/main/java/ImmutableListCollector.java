@@ -16,7 +16,7 @@ public class ImmutableListCollector<T> implements Collector<T, ImmutableList.Bui
 
     @Override
     public BiConsumer<ImmutableList.Builder<T>, T> accumulator() {
-        return (b, e) -> b.add(e);
+        return ImmutableList.Builder::add;
     }
 
     @Override

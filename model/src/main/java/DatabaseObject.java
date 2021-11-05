@@ -36,6 +36,10 @@ public record DatabaseObject(String name, String objectType, ImmutableMap<String
         }
     }
 
+    public String uniqueIdentifier() {
+        return "Name: " + name + "; ObjectType: " + objectType + "; Parent: " + (properties.getOrDefault("parent", "top-level object"));
+    }
+
     @Override
     public String toString() {
         var yaml = YamlHelper.newYaml();
