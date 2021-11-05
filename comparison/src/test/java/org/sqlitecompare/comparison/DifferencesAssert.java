@@ -1,4 +1,7 @@
+package org.sqlitecompare.comparison;
+
 import org.assertj.core.api.ListAssert;
+import org.sqlitecompare.model.DatabaseObject;
 
 import java.util.List;
 import java.util.function.Predicate;

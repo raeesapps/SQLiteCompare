@@ -1,5 +1,8 @@
+package org.sqlitecompare.model;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import org.sqlitecompare.WorkScheduler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +11,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 public final class DatabaseFactory {
-    private static final String CLASS_INITIALISATION_EXCEPTION_MESSAGE = "DatabaseFactory cannot be initialised!";
+    private static final String CLASS_INITIALISATION_EXCEPTION_MESSAGE = "org.sqlitecompare.model.DatabaseFactory cannot be initialised!";
 
     private static final WorkScheduler workScheduler = new WorkScheduler();
 

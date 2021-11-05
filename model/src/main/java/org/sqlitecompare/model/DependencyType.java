@@ -1,3 +1,5 @@
+package org.sqlitecompare.model;
+
 public enum DependencyType {
     SUBOBJECT(0),
     REQUIRES(1);

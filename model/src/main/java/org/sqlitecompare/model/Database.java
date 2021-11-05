@@ -1,6 +1,9 @@
+package org.sqlitecompare.model;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableList;
 import org.javatuples.Pair;
+import org.sqlitecompare.ImmutableMapCollector;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.nodes.Tag;
 

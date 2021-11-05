@@ -1,3 +1,5 @@
+package org.sqlitecompare.model;
+
 import com.google.common.collect.ImmutableList;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.nodes.Tag;

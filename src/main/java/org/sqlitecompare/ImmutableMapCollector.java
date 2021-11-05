@@ -1,3 +1,5 @@
+package org.sqlitecompare;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.javatuples.Pair;

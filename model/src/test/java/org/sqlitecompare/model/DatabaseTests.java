@@ -1,5 +1,11 @@
+package org.sqlitecompare.model;
+
 import org.junit.Assert;
 import org.junit.Test;
+import org.sqlitecompare.model.Database;
+import org.sqlitecompare.model.DatabaseObject;
+import org.sqlitecompare.model.Dependency;
+import org.sqlitecompare.model.DependencyType;
 
 public class DatabaseTests {
     @Test

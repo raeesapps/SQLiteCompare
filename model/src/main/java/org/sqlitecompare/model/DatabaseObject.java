@@ -1,3 +1,5 @@
+package org.sqlitecompare.model;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.yaml.snakeyaml.DumperOptions;

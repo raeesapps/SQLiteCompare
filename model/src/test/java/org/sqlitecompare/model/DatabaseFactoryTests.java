@@ -1,7 +1,10 @@
+package org.sqlitecompare.model;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Assert;
 import org.junit.Test;
+import org.sqlitecompare.model.*;
 
 import java.util.concurrent.ExecutionException;
 

@@ -1,4 +1,10 @@
+package org.sqlitecompare.comparison;
+
 import org.junit.Test;
+import org.sqlitecompare.model.Database;
+import org.sqlitecompare.model.DatabaseObject;
+import org.sqlitecompare.model.Dependency;
+import org.sqlitecompare.model.DependencyType;
 
 import java.util.stream.Collectors;
 
@@ -6,8 +12,7 @@ public class ComparerTests {
 
     @Test
     public void surname_datatype_different() {
-        var sourceEmployees = new DatabaseObject
-                .Builder()
+        var sourceEmployees = new DatabaseObject.Builder()
                 .name("employees")
                 .objectType("table")
                 .dependency(new Dependency(DependencyType.SUBOBJECT, "firstname"))
@@ -27,8 +32,7 @@ public class ComparerTests {
                 .property("type", "varchar")
                 .property("parent", "employees")
                 .build();
-        var source = new Database
-                .Builder()
+        var source = new Database.Builder()
                 .object("tables", sourceEmployees)
                 .object("columns", sourceEmployeesFirstname)
                 .object("columns", sourceEmployeesSurname)

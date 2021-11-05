@@ -1,8 +1,14 @@
+package org.sqlitecompare.comparison;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.javatuples.Pair;
+import org.sqlitecompare.model.Database;
+import org.sqlitecompare.model.DatabaseObject;
+import org.sqlitecompare.ImmutableListCollector;
+import org.sqlitecompare.ImmutableMapCollector;
 
 import java.util.Optional;
 import java.util.stream.Stream;
