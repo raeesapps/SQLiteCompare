@@ -77,6 +77,30 @@ public final class ComparerTests {
     }
 
     @Test
+    public void surname_datatype_different_and_target_has_job_column() {
+        var sourceDatabaseBuilder = new Database.Builder();
+        var sourceEmployees = A.table().withName("employees").withDependency("firstname").withDependency("surname").build();
+        var sourceEmployeesFirstname = A.column().withName("firstname").withDatatype("varchar").withParentTable("employees").build();
+        var sourceEmployeesSurname = A.column().withName("surname").withDatatype("varchar").withParentTable("employees").build();
+        TableBuilder.addTable(sourceDatabaseBuilder, sourceEmployees, sourceEmployeesFirstname, sourceEmployeesSurname);
+        var source = sourceDatabaseBuilder.build();
+        var targetDatabaseBuilder = new Database.Builder();
+        var targetEmployees = A.table().withName("employees").withDependency("firstname").withDependency("surname").withDependency("job").build();
+        var targetEmployeesFirstname = A.column().withName("firstname").withDatatype("varchar").withParentTable("employees").build();
+        var targetEmployeesSurname = A.column().withName("surname").withDatatype("int").withParentTable("employees").build();
+        var targetEmployeesJob = A.column().withName("job").withDatatype("varchar").withParentTable("employees").build();
+        TableBuilder.addTable(targetDatabaseBuilder, targetEmployees, targetEmployeesFirstname, targetEmployeesSurname, targetEmployeesJob);
+        var target = targetDatabaseBuilder.build();
+
+        var differences = Comparer.compare(source, target).collect(Collectors.toList());
+
+        DifferencesAssert.assertThat(differences).containsDifferent(sourceEmployees, targetEmployees);
+        DifferencesAssert.assertThat(differences).containsEqual(sourceEmployeesFirstname, targetEmployeesFirstname);
+        DifferencesAssert.assertThat(differences).containsDifferent(sourceEmployeesSurname, targetEmployeesSurname);
+        DifferencesAssert.assertThat(differences).containsOnlyInTarget(targetEmployeesJob);
+    }
+
+    @Test
     public void surname_datatype_different_in_employees_but_equal_in_hr() {
         var sourceDatabaseBuilder = new Database.Builder();
         var sourceEmployees = A.table().withName("employees").withDependency("firstname").withDependency("surname").build();
