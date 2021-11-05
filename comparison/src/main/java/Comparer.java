@@ -48,6 +48,8 @@ public final class Comparer {
                 .parallelStream()
                 .filter(object -> !targetObjectKeySet.contains(object))
                 .map(sourceObjectMapping::get));
+
+        @SuppressWarnings("SuspiciousMethodCalls")
         var targetExceptSource = onlyInTarget(sourceTargetUnion
                 .parallelStream()
                 .filter(object -> !sourceObjects.contains(object))
